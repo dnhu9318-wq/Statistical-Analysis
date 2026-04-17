@@ -1,0 +1,81 @@
+import matplotlib.pyplot as plt
+
+#SETUP
+#Classify BP
+def classify_bp(sys,dia):
+    if sys < 90 or dia < 60:
+        return "Low"
+    if sys >= 130 or dia >= 100:
+        return "Elevated"
+    else:
+        return "Normal"
+
+#Separate Counts
+morning_counts = {"Low":0,"Elevated":0,"Normal":0}
+evening_counts = {"Low":0,"Elevated":0,"Normal":0}
+
+#Read file
+try:
+    with open("blood_pressure_dataset.txt", "r") as f:
+        lines = f.readlines()
+except FileNotFoundError:
+    print ("File Not Found")
+    exit()
+#if file not found, directly insert file directory 
+
+#MAINCODE
+#Parse each line
+for line in lines:
+    if "Day" not in line:
+        continue
+
+    #Extract values
+    parts = line.strip().split(",")
+
+    morning = parts[0].split()[-1]
+    evening = parts[1].split()[-1]
+
+    #Integer conversion
+    m_sys, m_dia = map(int,morning.split("/"))
+    e_sys, e_dia = map(int,evening.split("/"))
+
+    #Classify counts separately
+    morning_counts[classify_bp(m_sys,m_dia)]+=1
+    evening_counts[classify_bp(e_sys,e_dia)]+=1
+
+fig, axes = plt.subplots(1,3,figsize=(15,5))
+
+#Morning Chart
+axes[0].pie(
+    list(morning_counts.values()),
+    labels = list(morning_counts.keys()),
+    explode=[0.05]*3,
+    autopct='%1.2f%%'
+)
+axes[0].set_title("Morning BP Distribution")
+
+#Evening Chart
+axes[1].pie(
+    list(evening_counts.values()),
+    labels = list(evening_counts.keys()),
+    explode=[0.05]*3,
+    autopct='%1.2f%%'
+)
+axes[1].set_title("Evening BP Distribution")
+
+#Total Chart
+total_counts = {
+    "Low":morning_counts["Low"] + evening_counts["Low"],
+    "Normal":morning_counts["Normal"] + evening_counts["Normal"],
+    "Elevated":morning_counts["Elevated"] + evening_counts["Elevated"],
+}
+
+axes[2].pie(
+list(total_counts.values()),
+    labels = list(total_counts.keys()),
+    explode=[0.05]*3,
+    autopct='%1.2f%%'
+)
+axes[2].set_title("Total BP Distribution")
+    
+plt.show()
