@@ -1,0 +1,17 @@
+Blood Pressure Dataset (2 Weeks, Twice Daily)
+
+Day 1: Morning 118/76, Evening 122/80 
+Day 2: Morning 115/74, Evening 119/78 
+Day 3: Morning 130/85, Evening 135/88 
+Day 4: Morning 142/92, Evening 145/95 
+Day 5: Morning 138/90, Evening 140/92 
+Day 6: Morning 110/70, Evening 112/72 
+Day 7: Morning 95/60, Evening 98/62 
+Day 8: Morning 100/65, Evening 105/68 
+Day 9: Morning 125/82, Evening 128/84 
+Day 10: Morning 135/88, Evening 138/90 
+Day 11: Morning 145/95, Evening 150/98 
+Day 12: Morning 120/78, Evening 122/80 
+Day 13: Morning 105/68, Evening 108/70 
+Day 14: Morning 92/58, Evening 95/60
+
