@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 def classify_bp(sys,dia):
     if sys < 90 or dia < 60:
         return "Low"
-    if sys >= 130 or dia >= 100:
+    elif sys >= 130 or dia >= 80:
         return "Elevated"
     else:
         return "Normal"
@@ -43,38 +43,53 @@ for line in lines:
     morning_counts[classify_bp(m_sys,m_dia)]+=1
     evening_counts[classify_bp(e_sys,e_dia)]+=1
 
+#Generate 3 plots without showing 0% label
 fig, axes = plt.subplots(1,3,figsize=(15,5))
+def format_pct(pct):
+    return f"{pct:.2f}%" if pct > 0 else""
+
+#Filter out categories with 0%
+def filter_zero_counts(counts_dict):
+    labels = []
+    values = []
+    for k,v in counts_dict.items():
+        if v > 0:
+            labels.append(k)
+            values.append(v)
+    return labels, values
 
 #Morning Chart
+labels_m, values_m = filter_zero_counts(morning_counts)
 axes[0].pie(
-    list(morning_counts.values()),
-    labels = list(morning_counts.keys()),
-    explode=[0.05]*3,
-    autopct='%1.2f%%'
+    values_m,
+    labels = labels_m,
+    explode=[0.05]*len(values_m),
+    autopct=format_pct
 )
 axes[0].set_title("Morning BP Distribution")
 
 #Evening Chart
+labels_e, values_e = filter_zero_counts(evening_counts)
 axes[1].pie(
-    list(evening_counts.values()),
-    labels = list(evening_counts.keys()),
-    explode=[0.05]*3,
-    autopct='%1.2f%%'
+    values_e,
+    labels = labels_e,
+    explode=[0.05]*len(values_e),
+    autopct=format_pct
 )
 axes[1].set_title("Evening BP Distribution")
 
 #Total Chart
 total_counts = {
-    "Low":morning_counts["Low"] + evening_counts["Low"],
-    "Normal":morning_counts["Normal"] + evening_counts["Normal"],
-    "Elevated":morning_counts["Elevated"] + evening_counts["Elevated"],
+    "Low": morning_counts["Low"] + evening_counts["Low"],
+    "Normal": morning_counts["Normal"] + evening_counts["Normal"],
+    "Elevated": morning_counts["Elevated"] + evening_counts["Elevated"],
 }
-
+labels_t, values_t = filter_zero_counts(total_counts)
 axes[2].pie(
-list(total_counts.values()),
-    labels = list(total_counts.keys()),
-    explode=[0.05]*3,
-    autopct='%1.2f%%'
+    values_t,
+    labels = labels_t,
+    explode=[0.05]*len(values_t),
+    autopct=format_pct
 )
 axes[2].set_title("Total BP Distribution")
     
